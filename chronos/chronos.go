@@ -16,7 +16,7 @@ const (
 	Year
 )
 
-var NilTime time.Time
+var nilTime time.Time
 
 func (tu TimeUnit) String() string {
 	switch tu {
@@ -123,24 +123,26 @@ func (f Frequency) addTo(t time.Time, mul uint) time.Time {
 	case Year:
 		return time.Date(year+fq, month, day, hour, min, sec, 0, loc)
 	default:
-		return NilTime
+		return nilTime
 	}
 }
 
 func (f Frequency) minApprox() time.Duration { return time.Duration(f.Count) * f.Unit.minApprox() }
 func (f Frequency) maxApprox() time.Duration { return time.Duration(f.Count) * f.Unit.maxApprox() }
 
+// Chronos describes a time schedule. It has a start and optional end point and an optional frequency.
 type Chronos struct {
 	Start, End time.Time
 	Freq       Frequency
 }
 
+// NextAfter calculates the next time in the schedule after t. If no such time exists, nil is returned (test with Time.IsZero()).
 func (c Chronos) NextAfter(t time.Time) time.Time {
 	if !t.After(c.Start) {
 		return c.Start
 	}
 	if c.Freq.Count == 0 {
-		return NilTime
+		return nilTime
 	}
 
 	d := t.Sub(c.Start)
@@ -154,10 +156,10 @@ func (c Chronos) NextAfter(t time.Time) time.Time {
 			continue
 		}
 		if (!c.End.IsZero()) && t2.After(c.End) {
-			return NilTime
+			return nilTime
 		}
 		return t2
 	}
 
-	return NilTime // Should actually never happen...
+	return nilTime // Should actually never happen...
 }
