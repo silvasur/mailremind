@@ -1,11 +1,17 @@
 package chronos
 
 import (
+	"errors"
+	"fmt"
 	"math"
+	"strconv"
+	"strings"
 	"time"
 )
 
 type TimeUnit int
+
+const timefmt = "2006-01-02 15:04:05"
 
 const (
 	Minute TimeUnit = iota
@@ -17,6 +23,15 @@ const (
 )
 
 var nilTime time.Time
+
+var tuLookup = map[string]TimeUnit{
+	"Minute": Minute,
+	"Hour":   Hour,
+	"Day":    Day,
+	"Week":   Week,
+	"Month":  Month,
+	"Year":   Year,
+}
 
 func (tu TimeUnit) String() string {
 	switch tu {
@@ -98,6 +113,10 @@ type Frequency struct {
 	Count uint
 }
 
+func (f Frequency) String() string {
+	return fmt.Sprintf("%d %s", f.Count, f.Unit)
+}
+
 func (f Frequency) addTo(t time.Time, mul uint) time.Time {
 	sec := t.Second()
 	min := t.Minute()
@@ -162,4 +181,49 @@ func (c Chronos) NextAfter(t time.Time) time.Time {
 	}
 
 	return nilTime // Should actually never happen...
+}
+
+func (c Chronos) String() string {
+	s := c.Start.UTC().Format(timefmt)
+	if c.Freq.Count > 0 {
+		s += " +" + c.Freq.String()
+		if !c.End.IsZero() {
+			s += " !" + c.End.UTC().Format(timefmt)
+		}
+	}
+	return s
+}
+
+func ParseChronos(s string) (c Chronos, err error) {
+	elems := strings.Split(s, " ")
+
+	switch len(elems) {
+	case 6: // Everything specified
+		_end := elems[4] + " " + elems[5]
+		if c.End, err = time.ParseInLocation(timefmt, _end[1:], time.UTC); err != nil {
+			return
+		}
+		fallthrough
+	case 4: // start time and frequency
+		var count uint64
+		if count, err = strconv.ParseUint(elems[2][1:], 10, 32); err != nil {
+			return
+		}
+		c.Freq.Count = uint(count)
+		
+		var ok bool
+		if c.Freq.Unit, ok = tuLookup[elems[3]]; !ok {
+			err = fmt.Errorf("Unknown timeunit %s", elems[3])
+			return
+		}
+		fallthrough
+	case 2: // Only start time
+		if c.Start, err = time.ParseInLocation(timefmt, elems[0]+" "+elems[1], time.UTC); err != nil {
+			return
+		}
+	default:
+		err = errors.New("Unknown chronos format")
+	}
+
+	return
 }
