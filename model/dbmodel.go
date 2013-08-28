@@ -23,9 +23,16 @@ type User interface {
 	PWHash() []byte
 	SetPWHash([]byte) error
 
-	AddJob() Job
+	AddJob(subject string, content []byte, chron chronos.MultiChronos, next time.Time) (Job, error)
 	Jobs() []Job
 	JobByID(DBID) (Job, error)
+	CountJobs() int
+
+	Active() bool
+	SetActive(bool) error
+
+	ActivationCode() string
+	SetActivationCode(string) error
 
 	Delete() error
 }
@@ -40,8 +47,8 @@ type Job interface {
 	Content() []byte
 	SetContent([]byte) error
 
-	Chronos() []chronos.Chronos
-	SetChronos([]chronos.Chronos) error
+	Chronos() chronos.MultiChronos
+	SetChronos(chronos.MultiChronos) error
 
 	Next() time.Time
 	SetNext(time.Time) error
@@ -55,10 +62,11 @@ type DBCon interface {
 	UserByID(DBID) (User, error)
 	UserByMail(string) (User, error)
 
-	LastAccess() time.Time
-	SetLastAccess(time.Time) error
+	AddUser(email string, pwhash []byte, location *time.Location, active bool, acCode string) (User, error)
 
-	JobsBetween(a, b time.Time) ([]Job, error)
+	InactiveUsers(olderthan time.Time) []DBID
+
+	JobsBefore(t time.Time) []DBID // Get Jobs with next <= t
 }
 
 type DBInfo struct {
@@ -80,4 +88,12 @@ func Register(name string, dbinfo DBInfo) {
 func GetDBInfo(name string) (DBInfo, bool) {
 	dbinfo, ok := dbinfos[name]
 	return dbinfo, ok
+}
+
+func AllDatabases() []string {
+	names := make([]string, 0, len(dbinfos))
+	for name := range dbinfos {
+		names = append(names, name)
+	}
+	return names
 }
