@@ -210,7 +210,7 @@ func ParseChronos(s string) (c Chronos, err error) {
 			return
 		}
 		c.Freq.Count = uint(count)
-		
+
 		var ok bool
 		if c.Freq.Unit, ok = tuLookup[elems[3]]; !ok {
 			err = fmt.Errorf("Unknown timeunit %s", elems[3])
@@ -223,6 +223,57 @@ func ParseChronos(s string) (c Chronos, err error) {
 		}
 	default:
 		err = errors.New("Unknown chronos format")
+	}
+
+	return
+}
+
+type MultiChronos []Chronos
+
+func (mc MultiChronos) NextAfter(t time.Time) time.Time {
+	var nearest time.Time
+
+	for _, c := range mc {
+		next := c.NextAfter(t)
+		if next.IsZero() {
+			continue
+		}
+
+		if nearest.IsZero() {
+			nearest = next
+		} else if next.Before(nearest) {
+			nearest = next
+		}
+	}
+
+	return nearest
+}
+
+func (mc MultiChronos) String() (s string) {
+	sep := ""
+
+	for _, c := range mc {
+		s += sep + c.String()
+		sep = "\n"
+	}
+
+	return
+}
+
+func ParseMultiChronos(s string) (mc MultiChronos, err error) {
+	parts := strings.Split(s, "\n")
+	for l, _part := range parts {
+		part := strings.TrimSpace(_part)
+		if part == "" {
+			continue
+		}
+
+		c, err := ParseChronos(part)
+		if err != nil {
+			return nil, fmt.Errorf("Line %d: %s", l+1, err)
+		}
+
+		mc = append(mc, c)
 	}
 
 	return
