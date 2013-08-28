@@ -66,7 +66,7 @@ type DBCon interface {
 
 	InactiveUsers(olderthan time.Time) []DBID
 
-	JobsBefore(t time.Time) []DBID // Get Jobs with next <= t
+	JobsBefore(t time.Time) []Job // Get Jobs with next <= t
 }
 
 type DBInfo struct {

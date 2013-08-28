@@ -44,7 +44,7 @@ var queries = map[int]string{
 	qSetContent:          "UPDATE `jobs` SET `content` = ? WHERE `id` = ?",
 	qSetNext:             "UPDATE `jobs` SET `next` = ? WHERE `id` = ?",
 	qDelJob:              "DELETE FROM `jobs` WHERE `id` = ?",
-	qJobsBefore:          "SELECT `id` FROM `jobs` WHERE `next` <= ?",
+	qJobsBefore:          qfragSelJob + "WHERE `next` <= ?",
 	qInsertJob:           "INSERT INTO `jobs` (`user`, `subject`, `content`, `next`, `chronos`) VALUES (?, ?, ?, ?, ?)",
 	qInsertUser:          "INSERT INTO `users` (`email`, `passwd`, `location`, `active`, `activationcode`, `added`) VALUES (?, ?, ?, ?, ?, ?)",
 	qSetChronos:          "UPDATE `jobs` SET `chronos` = ? WHERE `id` = ?",

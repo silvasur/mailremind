@@ -182,21 +182,20 @@ func (j *Job) Delete() error {
 	return err
 }
 
-func (con *MySQLDBCon) JobsBefore(t time.Time) []model.DBID {
+func (con *MySQLDBCon) JobsBefore(t time.Time) (jobs []model.Job) {
 	rows, err := con.stmt[qJobsBefore].Query(t.Unix())
 	if err != nil {
 		log.Fatalf("Could not get jobs before %s: %s", t, err) // TODO: Really fatal?
 	}
 
-	ids := make([]model.DBID, 0)
 	for rows.Next() {
-		var _id uint64
-		if err := rows.Scan(&_id); err != nil {
-			log.Printf("Could not get all jobs before %s: %s", t, err)
+		job, err := jobFromSQL(con, rows)
+		if err != nil {
+			log.Fatalf("Could not get all jobs before %s: %s", t, err)
 			break
 		}
-		ids = append(ids, DBID(_id))
+		jobs = append(jobs, job)
 	}
 
-	return ids
+	return
 }
