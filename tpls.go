@@ -16,7 +16,10 @@ func loadTpl(tplpath, name string) *template.Template {
 	return tpl
 }
 
-var tplRegister *template.Template
+var (
+	tplRegister *template.Template
+	tplMsg      *template.Template
+)
 
 func initTpls() {
 	tplpath, err := conf.GetString("paths", "tpls")
@@ -25,4 +28,9 @@ func initTpls() {
 	}
 
 	tplRegister = loadTpl(tplpath, "register")
+	tplMsg = loadTpl(tplpath, "msg")
+}
+
+type msgTpldata struct {
+	Title, Class, Msg string
 }

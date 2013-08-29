@@ -50,6 +50,7 @@ func main() {
 	router := mux.NewRouter()
 	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(staticpath))))
 	router.HandleFunc("/register", register)
+	router.HandleFunc("/activate", activate)
 
 	http.Handle("/", router)
 
