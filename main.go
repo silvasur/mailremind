@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	"github.com/kch42/simpleconf"
 	_ "kch42.de/gostuff/mailremind/model/mysql"
 	"log"
@@ -16,6 +18,8 @@ func debug(rw http.ResponseWriter, req *http.Request) {
 
 var conf simpleconf.Config
 var baseurl string
+
+var SessionStorage = sessions.NewCookieStore(securecookie.GenerateRandomKey(32), securecookie.GenerateRandomKey(32))
 
 func main() {
 	confpath := flag.String("config", "", "Path to config file")
@@ -51,6 +55,8 @@ func main() {
 	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(staticpath))))
 	router.HandleFunc("/register", register)
 	router.HandleFunc("/activate", activate)
+	router.HandleFunc("/login", login)
+	router.HandleFunc("/logincheck", logincheck)
 
 	http.Handle("/", router)
 
