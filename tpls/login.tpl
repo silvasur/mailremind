@@ -12,6 +12,7 @@
 			<p><strong>E-Mail</strong> <input type="text" name="Mail" /></p>
 			<p><strong>Password</strong> <input type="password" name="Password" /></p>
 			<p><input type="submit" /></p>
+			<p><a href="/forgotpw">Forgot your password?</a></p>
 		</form>
 	{{end}}
 {{end}}

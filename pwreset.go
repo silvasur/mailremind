@@ -75,3 +75,39 @@ func pwreset(user model.User, sess *sessions.Session, req *http.Request) interfa
 	outdata.Success = "Password was changed"
 	return outdata
 }
+
+type forgotpwTpldata struct {
+	Error, Success string
+}
+
+func forgotpw(user model.User, sess *sessions.Session, req *http.Request) interface{} {
+	if req.Method != "POST" {
+		return &forgotpwTpldata{}
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return &forgotpwTpldata{Error: "Could not understand formdata."}
+	}
+
+	email := req.FormValue("Mail")
+	if email == "" {
+		return &forgotpwTpldata{Error: "E-Mail must not be empty."}
+	}
+
+	user, err := dbcon.UserByMail(email)
+	if err != nil {
+		return &forgotpwTpldata{Error: "E-Mail not found."}
+	}
+
+	key := genAcCode()
+	if err := user.SetActivationCode(key); err != nil {
+		log.Printf("Could not store pwreset key: %s", err)
+		return &forgotpwTpldata{Error: "Could not store keyword reset code. If this happens again, please contact support."}
+	}
+
+	if !SendPwresetLink(user.Email(), key, user.ID()) {
+		return &forgotpwTpldata{Error: "Could not send reset E-Mail. If this happens again, please contact support."}
+	}
+
+	return &forgotpwTpldata{Success: "We sent you an E-Mail with further instructions."}
+}

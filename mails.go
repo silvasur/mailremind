@@ -18,7 +18,10 @@ func loadMailTpl(tplroot, name string) *template.Template {
 	return tpl
 }
 
-var mailActivationcode *template.Template
+var (
+	mailActivationcode *template.Template
+	mailPwreset        *template.Template
+)
 
 func initMails() {
 	tplroot, err := conf.GetString("paths", "mailtpls")
@@ -27,6 +30,7 @@ func initMails() {
 	}
 
 	mailActivationcode = loadMailTpl(tplroot, "activationcode")
+	mailPwreset = loadMailTpl(tplroot, "pwreset")
 }
 
 type activationcodeData struct {
@@ -45,6 +49,24 @@ func SendActivationcode(to, acCode string, uid model.DBID) bool {
 	url := fmt.Sprintf("%s/activate/U=%s&Code=%s", baseurl, uid, acCode)
 	if err := mailActivationcode.Execute(buf, activationcodeData{url}); err != nil {
 		log.Printf("Error while executing mail template (activationcode): %s", err)
+		return false
+	}
+
+	return Mail(to, MailFrom, buf.Bytes())
+}
+
+func SendPwresetLink(to, code string, uid model.DBID) bool {
+	buf := new(bytes.Buffer)
+	fmt.Fprintf(buf, "To: %s\n", to)
+	fmt.Fprintf(buf, "From: %s\n", MailFrom)
+	fmt.Fprintf(buf, "Subject: Password reset request for your mailremind account\n")
+	fmt.Fprintf(buf, "Date: %s\n", time.Now().Format(time.RFC822))
+
+	fmt.Fprintln(buf, "")
+
+	url := fmt.Sprintf("%s/pwreset?U=%s&Code=%s", baseurl, uid, code)
+	if err := mailPwreset.Execute(buf, activationcodeData{url}); err != nil {
+		log.Printf("Error while executing mail template (pwreset): %s", err)
 		return false
 	}
 
