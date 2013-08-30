@@ -40,6 +40,15 @@ func userFromSess(sess *sessions.Session) model.User {
 	return user
 }
 
+func getSess(req *http.Request) (*sessions.Session, error) {
+	sess, err := SessionStorage.Get(req, "mailremind-sess")
+	if err != nil {
+		sess, err = SessionStorage.New(req, "mailremind-sess")
+	}
+
+	return sess, err
+}
+
 func login(rw http.ResponseWriter, req *http.Request) {
 	outdata := &loginTpldata{}
 	defer func() {
@@ -48,9 +57,10 @@ func login(rw http.ResponseWriter, req *http.Request) {
 		}
 	}()
 
-	sess, err := SessionStorage.Get(req, "mailremind-sess")
+	sess, err := getSess(req)
 	if err != nil {
-		sess, _ = SessionStorage.New(req, "mailremind-sess")
+		outdata.Error = "Could not create a session. " + err.Error()
+		return
 	}
 	defer func() {
 		if err := sess.Save(req, rw); err != nil {
@@ -103,7 +113,7 @@ func login(rw http.ResponseWriter, req *http.Request) {
 }
 
 func logincheck(rw http.ResponseWriter, req *http.Request) {
-	sess, _ := SessionStorage.Get(req, "mailremind-sess")
+	sess, _ := getSess(req)
 	user := userFromSess(sess)
 	outdata := new(msgTpldata)
 	if user == nil {
@@ -112,4 +122,31 @@ func logincheck(rw http.ResponseWriter, req *http.Request) {
 		outdata.Msg = user.Email()
 	}
 	tplMsg.Execute(rw, outdata)
+}
+
+func logout(rw http.ResponseWriter, req *http.Request) {
+	outdata := &msgTpldata{Class: "error", Title: "Logout"}
+	defer func() {
+		if err := tplMsg.Execute(rw, outdata); err != nil {
+			log.Printf("Error executing template in login: %s", err)
+		}
+	}()
+
+	sess, err := getSess(req)
+	if err != nil {
+		outdata.Msg = "Could not create a session."
+		return
+	}
+	defer func() {
+		if err := sess.Save(req, rw); err != nil {
+			log.Printf("Error while saving session: %s", err)
+			outdata.Class = "error"
+			outdata.Msg = "Error while saving session."
+			return
+		}
+	}()
+
+	delete(sess.Values, "uid")
+	outdata.Class = "success"
+	outdata.Msg = "Your are now logged out."
 }

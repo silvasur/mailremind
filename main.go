@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/kch42/simpleconf"
 	_ "kch42.de/gostuff/mailremind/model/mysql"
@@ -19,7 +19,29 @@ func debug(rw http.ResponseWriter, req *http.Request) {
 var conf simpleconf.Config
 var baseurl string
 
-var SessionStorage = sessions.NewCookieStore(securecookie.GenerateRandomKey(32), securecookie.GenerateRandomKey(32))
+var SessionStorage sessions.Store
+
+func initSessions() {
+	_auth, err := conf.GetString("securecookies", "auth")
+	if err != nil {
+		log.Fatalf("Could not get securecookies.auth from config: %s", err)
+	}
+	auth, err := hex.DecodeString(_auth)
+	if err != nil {
+		log.Fatalf("Could not decode securecookies.auth as hex: %s", err)
+	}
+
+	_crypt, err := conf.GetString("securecookies", "crypt")
+	if err != nil {
+		log.Fatalf("Could not get securecookies.crypt from config: %s", err)
+	}
+	crypt, err := hex.DecodeString(_crypt)
+	if err != nil {
+		log.Fatalf("Could not decode securecookies.auth as hex: %s", err)
+	}
+
+	SessionStorage = sessions.NewCookieStore(auth, crypt)
+}
 
 func main() {
 	confpath := flag.String("config", "", "Path to config file")
@@ -34,6 +56,7 @@ func main() {
 		log.Fatalf("Could not get web.baseurl from config: %s", err)
 	}
 
+	initSessions()
 	initTpls()
 	loadTimeLocs()
 	initMailing()
@@ -57,6 +80,7 @@ func main() {
 	router.HandleFunc("/activate", activate)
 	router.HandleFunc("/login", login)
 	router.HandleFunc("/logincheck", logincheck)
+	router.HandleFunc("/logout", logout)
 
 	http.Handle("/", router)
 
