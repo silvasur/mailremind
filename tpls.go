@@ -23,6 +23,7 @@ var (
 	tplReallyDelete *template.Template
 	tplPwreset      *template.Template
 	tplForgotpw     *template.Template
+	tplJobs         *template.Template
 )
 
 func initTpls() {
@@ -37,6 +38,7 @@ func initTpls() {
 	tplReallyDelete = loadTpl(tplpath, "reallydelete")
 	tplPwreset = loadTpl(tplpath, "pwreset")
 	tplForgotpw = loadTpl(tplpath, "forgotpw")
+	tplJobs = loadTpl(tplpath, "jobs")
 }
 
 type msgTpldata struct {
