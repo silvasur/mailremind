@@ -76,11 +76,11 @@ func main() {
 
 	router := mux.NewRouter()
 	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(staticpath))))
-	router.HandleFunc("/register", register)
-	router.HandleFunc("/activate", activate)
-	router.HandleFunc("/login", login)
-	router.HandleFunc("/logincheck", logincheck)
-	router.HandleFunc("/logout", logout)
+	router.HandleFunc("/register", mkHttpHandler(register, tplRegister))
+	router.HandleFunc("/activate", mkHttpHandler(activate, tplMsg))
+	router.HandleFunc("/login", mkHttpHandler(login, tplLogin))
+	router.HandleFunc("/logincheck", mkHttpHandler(logincheck, tplMsg))
+	router.HandleFunc("/logout", mkHttpHandler(logout, tplMsg))
 
 	http.Handle("/", router)
 
