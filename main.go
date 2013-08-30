@@ -87,6 +87,7 @@ func main() {
 	router.HandleFunc("/logout", mkHttpHandler(logout, tplMsg))
 	router.HandleFunc("/delete-acc/yes", mkHttpHandler(deleteacc, tplMsg))
 	router.HandleFunc("/delete-acc", mkHttpHandler(deleteask, tplReallyDelete))
+	router.HandleFunc("/pwreset", mkHttpHandler(pwreset, tplPwreset))
 
 	http.Handle("/", router)
 
