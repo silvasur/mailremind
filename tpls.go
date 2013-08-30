@@ -17,9 +17,10 @@ func loadTpl(tplpath, name string) *template.Template {
 }
 
 var (
-	tplRegister *template.Template
-	tplMsg      *template.Template
-	tplLogin    *template.Template
+	tplRegister     *template.Template
+	tplMsg          *template.Template
+	tplLogin        *template.Template
+	tplReallyDelete *template.Template
 )
 
 func initTpls() {
@@ -31,6 +32,7 @@ func initTpls() {
 	tplRegister = loadTpl(tplpath, "register")
 	tplMsg = loadTpl(tplpath, "msg")
 	tplLogin = loadTpl(tplpath, "login")
+	tplReallyDelete = loadTpl(tplpath, "reallydelete")
 }
 
 type msgTpldata struct {

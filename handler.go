@@ -59,7 +59,7 @@ func mkHttpHandler(h Handler, tpl *template.Template) http.HandlerFunc {
 		}
 
 		if err := tpl.Execute(rw, outdata); err != nil {
-			log.Printf("Error executing template %s: %s", tpl.Name, err)
+			log.Printf("Error executing template %s: %s", tpl.Name(), err)
 		}
 	}
 }
