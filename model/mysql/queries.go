@@ -20,6 +20,7 @@ const (
 	qInsertJob
 	qInsertUser
 	qSetChronos
+	qSetLocation
 	qEnd
 )
 
@@ -48,4 +49,5 @@ var queries = map[int]string{
 	qInsertJob:           "INSERT INTO `jobs` (`user`, `subject`, `content`, `next`, `chronos`) VALUES (?, ?, ?, ?, ?)",
 	qInsertUser:          "INSERT INTO `users` (`email`, `passwd`, `location`, `active`, `activationcode`, `added`) VALUES (?, ?, ?, ?, ?, ?)",
 	qSetChronos:          "UPDATE `jobs` SET `chronos` = ? WHERE `id` = ?",
+	qSetLocation:         "UPDATE `users` SET `location` = ? WHERE `id` = ?",
 }

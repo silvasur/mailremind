@@ -62,16 +62,17 @@ func (con *MySQLDBCon) UserByMail(email string) (model.User, error) {
 	return userFromSQL(con, row)
 }
 
-func (u *User) ID() model.DBID         { return u.id }
-func (u *User) Email() string          { return u.email }
-func (u *User) PWHash() []byte         { return []byte(u.passwd) }
-func (u *User) Active() bool           { return u.active }
-func (u *User) ActivationCode() string { return u.acCode }
+func (u *User) ID() model.DBID           { return u.id }
+func (u *User) Email() string            { return u.email }
+func (u *User) PWHash() []byte           { return []byte(u.passwd) }
+func (u *User) Active() bool             { return u.active }
+func (u *User) ActivationCode() string   { return u.acCode }
+func (u *User) Location() *time.Location { return u.location }
 
 func (u *User) SetPWHash(_pwhash []byte) error {
 	pwhash := string(_pwhash)
 
-	if _, err := u.con.stmt[qSetPWHash].Query(pwhash, uint64(u.id)); err != nil {
+	if _, err := u.con.stmt[qSetPWHash].Exec(pwhash, uint64(u.id)); err != nil {
 		return err
 	}
 
@@ -80,7 +81,7 @@ func (u *User) SetPWHash(_pwhash []byte) error {
 }
 
 func (u *User) SetActive(b bool) error {
-	if _, err := u.con.stmt[qSetActive].Query(b2i(b), uint64(u.id)); err != nil {
+	if _, err := u.con.stmt[qSetActive].Exec(b2i(b), uint64(u.id)); err != nil {
 		return err
 	}
 
@@ -89,11 +90,20 @@ func (u *User) SetActive(b bool) error {
 }
 
 func (u *User) SetActivationCode(c string) error {
-	if _, err := u.con.stmt[qSetAcCode].Query(c, uint64(u.id)); err != nil {
+	if _, err := u.con.stmt[qSetAcCode].Exec(c, uint64(u.id)); err != nil {
 		return err
 	}
 
 	u.acCode = c
+	return nil
+}
+
+func (u *User) SetLocation(loc *time.Location) error {
+	if _, err := u.con.stmt[qSetLocation].Exec(loc.String(), uint64(u.id)); err != nil {
+		return err
+	}
+
+	u.location = loc
 	return nil
 }
 

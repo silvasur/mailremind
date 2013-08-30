@@ -34,6 +34,9 @@ type User interface {
 	ActivationCode() string
 	SetActivationCode(string) error
 
+	Location() *time.Location
+	SetLocation(*time.Location) error
+
 	Delete() error
 }
 
