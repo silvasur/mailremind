@@ -9,7 +9,9 @@ import (
 	"github.com/kch42/simpleconf"
 	_ "kch42.de/gostuff/mailremind/model/mysql"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 func debug(rw http.ResponseWriter, req *http.Request) {
@@ -55,6 +57,8 @@ func main() {
 	if baseurl, err = conf.GetString("web", "baseurl"); err != nil {
 		log.Fatalf("Could not get web.baseurl from config: %s", err)
 	}
+
+	rand.Seed(time.Now().UnixNano())
 
 	initSessions()
 	initTpls()
