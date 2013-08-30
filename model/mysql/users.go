@@ -64,7 +64,7 @@ func (con *MySQLDBCon) UserByMail(email string) (model.User, error) {
 
 func (u *User) ID() model.DBID         { return u.id }
 func (u *User) Email() string          { return u.email }
-func (u *User) PWHash() []byte         { return []byte(u.PWHash()) }
+func (u *User) PWHash() []byte         { return []byte(u.passwd) }
 func (u *User) Active() bool           { return u.active }
 func (u *User) ActivationCode() string { return u.acCode }
 
