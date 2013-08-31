@@ -26,7 +26,10 @@
 				<p>
 					<strong>Start:</strong>
 						<input type="text" name="Start" value="{{.Start}}" /><br />
-					<input type="checkbox" name="RepetitionEnabled"{{if .RepetitionEnabled}} checked="checked"{{end}} />
+					<select name="RepetitionEnabled" size="0">
+						<option value="no"{{if not .RepetitionEnabled}} selected="selected"{{end}}>Off</option>
+						<option value="yes"{{if .RepetitionEnabled}} selected="selected"{{end}}>On</option>
+					</select>
 					<strong>Repetition:</strong>
 						<input type="text" name="Count" value="{{.Count}}" />
 						<select name="Unit" size="0">
@@ -38,7 +41,10 @@
 							<option value="Year"{{if .UnitIsYear}} selected="selected"{{end}}>Year(s)</option>
 						</select>
 						<br />
-					<input type="checkbox" name="EndEnabled"{{if .EndEnabled}} checked="checked"{{end}} />
+					<select name="EndEnabled" size="0">
+						<option value="no"{{if not .EndEnabled}} selected="selected"{{end}}>Off</option>
+						<option value="yes"{{if .EndEnabled}} selected="selected"{{end}}>On</option>
+					</select>
 					<strong>End:</strong>
 						<input type="text" name="End" value="{{.End}}" />
 				</p>
