@@ -23,7 +23,7 @@
 				<tbody>
 					{{range .Jobs}}<tr>
 						<td><input type="checkbox" name="Jobs" value="{{.ID}}" /></td>
-						<td><a href="/edit/{{.ID}}">{{.Subject}}</a></td>
+						<td><a href="/jobedit/{{.ID}}">{{.Subject}}</a></td>
 						<td>{{.Excerpt}}</td>
 						<td>{{.Next}}</td>
 					</tr>{{end}}

@@ -24,6 +24,7 @@ var (
 	tplPwreset      *template.Template
 	tplForgotpw     *template.Template
 	tplJobs         *template.Template
+	tplJobedit      *template.Template
 )
 
 func initTpls() {
@@ -39,6 +40,7 @@ func initTpls() {
 	tplPwreset = loadTpl(tplpath, "pwreset")
 	tplForgotpw = loadTpl(tplpath, "forgotpw")
 	tplJobs = loadTpl(tplpath, "jobs")
+	tplJobedit = loadTpl(tplpath, "jobedit")
 }
 
 type msgTpldata struct {

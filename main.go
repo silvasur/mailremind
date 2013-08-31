@@ -90,6 +90,8 @@ func main() {
 	router.HandleFunc("/pwreset", mkHttpHandler(pwreset, tplPwreset))
 	router.HandleFunc("/forgotpw", mkHttpHandler(forgotpw, tplForgotpw))
 	router.HandleFunc("/jobs", mkHttpHandler(jobs, tplJobs))
+	router.HandleFunc("/jobedit", mkHttpHandler(jobedit, tplJobedit))
+	router.HandleFunc("/jobedit/{ID}", mkHttpHandler(jobedit, tplJobedit))
 
 	http.Handle("/", router)
 
