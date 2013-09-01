@@ -26,6 +26,9 @@
 						<td><a href="/jobedit/{{.ID}}">{{.Subject}}</a></td>
 						<td>{{.Excerpt}}</td>
 						<td>{{.Next}}</td>
+					</tr>
+					{{else}}<tr>
+						<td colspan="4" class="emptytab">No jobs found</td>
 					</tr>{{end}}
 				</tbody>
 			</table>

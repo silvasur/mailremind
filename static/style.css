@@ -1,0 +1,71 @@
+* {
+	font-family: sans-serif;
+}
+
+body, html {
+	padding: 0px;
+	margin: 0px;
+}
+
+#main {
+	width: 85%;
+	margin: 7.5mm auto 10mm;
+	padding: 0px;
+	border: 1px solid black;
+	border-top: none;
+}
+
+#nav, #footer {
+	color: white;
+	background-color: black;
+	font-size: 10pt;
+}
+
+#nav a, #footer a {
+	color: white;
+}
+
+#content {
+	margin: 1mm 2mm 1mm;
+}
+
+#footer {
+	text-align: center;
+}
+
+#nav a {
+	text-decoration: none;
+}
+
+.fullwidth {
+	width: 100%;
+}
+
+.emptytab {
+	text-align: center;
+	font-style: italic;
+}
+
+#nav {
+	position: relative;
+}
+
+#nav ul {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	list-style: none;
+}
+
+#nav ul li {
+	float: right;
+	padding: 0px 2mm 0px;
+}
+
+#nav ul li:hover {
+	background-color: white;
+}
+
+#nav ul li:hover a {
+	color: black;
+}

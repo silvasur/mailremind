@@ -43,6 +43,11 @@ func userFromSess(sess *sessions.Session) model.User {
 	return user
 }
 
+type tpldata struct {
+	Mail string
+	Data interface{}
+}
+
 func mkHttpHandler(h Handler, tpl *template.Template) http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		sess, err := getSess(req)
@@ -53,12 +58,16 @@ func mkHttpHandler(h Handler, tpl *template.Template) http.HandlerFunc {
 
 		user := userFromSess(sess)
 		outdata := h(user, sess, req)
+		mail := ""
+		if user != nil {
+			mail = user.Email()
+		}
 
 		if err := sess.Save(req, rw); err != nil {
 			log.Printf("Error while saving session: %s", err)
 		}
 
-		if err := tpl.Execute(rw, outdata); err != nil {
+		if err := tpl.Execute(rw, &tpldata{mail, outdata}); err != nil {
 			log.Printf("Error executing template %s: %s", tpl.Name(), err)
 		}
 	}
