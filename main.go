@@ -78,6 +78,8 @@ func main() {
 		log.Fatalf("Could not get net.laddr config: %s", err)
 	}
 
+	go checkmails()
+
 	router := mux.NewRouter()
 	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(staticpath))))
 	router.HandleFunc("/register", mkHttpHandler(register, tplRegister))

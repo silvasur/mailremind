@@ -42,7 +42,7 @@ func SendActivationcode(to, acCode string, uid model.DBID) bool {
 	fmt.Fprintf(buf, "To: %s\n", to)
 	fmt.Fprintf(buf, "From: %s\n", MailFrom)
 	fmt.Fprintf(buf, "Subject: Activation code for your mailremind account\n")
-	fmt.Fprintf(buf, "Date: %s\n", time.Now().Format(time.RFC822))
+	fmt.Fprintf(buf, "Date: %s\n", time.Now().Format(time.RFC1123Z))
 
 	fmt.Fprintln(buf, "")
 
@@ -60,7 +60,7 @@ func SendPwresetLink(to, code string, uid model.DBID) bool {
 	fmt.Fprintf(buf, "To: %s\n", to)
 	fmt.Fprintf(buf, "From: %s\n", MailFrom)
 	fmt.Fprintf(buf, "Subject: Password reset request for your mailremind account\n")
-	fmt.Fprintf(buf, "Date: %s\n", time.Now().Format(time.RFC822))
+	fmt.Fprintf(buf, "Date: %s\n", time.Now().Format(time.RFC1123Z))
 
 	fmt.Fprintln(buf, "")
 
