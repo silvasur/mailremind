@@ -22,33 +22,44 @@
 			</p>
 			
 			<h2>Schedule</h2>
-			{{range .Schedules}}
-				<p>
-					<strong>Start:</strong>
-						<input type="text" name="Start" value="{{.Start}}" /><br />
-					<select name="RepetitionEnabled" size="0">
-						<option value="no"{{if not .RepetitionEnabled}} selected="selected"{{end}}>Off</option>
-						<option value="yes"{{if .RepetitionEnabled}} selected="selected"{{end}}>On</option>
-					</select>
-					<strong>Repetition:</strong>
-						<input type="text" name="Count" value="{{.Count}}" />
-						<select name="Unit" size="0">
-							<option value="Minute"{{if .UnitIsMinute}} selected="selected"{{end}}>Minute(s)</option>
-							<option value="Hour"{{if .UnitIsHour}} selected="selected"{{end}}>Hour(s)</option>
-							<option value="Day"{{if .UnitIsDay}} selected="selected"{{end}}>Day(s)</option>
-							<option value="Week"{{if .UnitIsWeek}} selected="selected"{{end}}>Week(s)</option>
-							<option value="Month"{{if .UnitIsMonth}} selected="selected"{{end}}>Month(s)</option>
-							<option value="Year"{{if .UnitIsYear}} selected="selected"{{end}}>Year(s)</option>
-						</select>
-						<br />
-					<select name="EndEnabled" size="0">
-						<option value="no"{{if not .EndEnabled}} selected="selected"{{end}}>Off</option>
-						<option value="yes"{{if .EndEnabled}} selected="selected"{{end}}>On</option>
-					</select>
-					<strong>End:</strong>
-						<input type="text" name="End" value="{{.End}}" />
-				</p>
-			{{end}}
+			<table class="fullwidth schedules">
+				<thead>
+					<tr>
+						<th>Start</th>
+						<th colspan="2">Repetition</th>
+						<th colspan="2">End</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range .Schedules}}<tr>
+						<td><input type="text" name="Start" value="{{.Start}}" /></td>
+						<td>
+							<select name="RepetitionEnabled" size="0" class="enabler">
+								<option value="no"{{if not .RepetitionEnabled}} selected="selected"{{end}}>Off</option>
+								<option value="yes"{{if .RepetitionEnabled}} selected="selected"{{end}}>On</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" name="Count" value="{{.Count}}" class="quant" />
+							<select name="Unit" size="0">
+								<option value="Minute"{{if .UnitIsMinute}} selected="selected"{{end}}>Minute(s)</option>
+								<option value="Hour"{{if .UnitIsHour}} selected="selected"{{end}}>Hour(s)</option>
+								<option value="Day"{{if .UnitIsDay}} selected="selected"{{end}}>Day(s)</option>
+								<option value="Week"{{if .UnitIsWeek}} selected="selected"{{end}}>Week(s)</option>
+								<option value="Month"{{if .UnitIsMonth}} selected="selected"{{end}}>Month(s)</option>
+								<option value="Year"{{if .UnitIsYear}} selected="selected"{{end}}>Year(s)</option>
+							</select>
+						</td>
+						<td>
+							<select name="EndEnabled" size="0" class="enabler">
+								<option value="no"{{if not .EndEnabled}} selected="selected"{{end}}>Off</option>
+								<option value="yes"{{if .EndEnabled}} selected="selected"{{end}}>On</option>
+							</select>
+						</td>
+						<td><input type="text" name="End" value="{{.End}}" /></td>
+					</tr>{{end}}
+				</tbody>
+			</table>
 			
 			<h2>Save</h2>
 			<input type="submit" />

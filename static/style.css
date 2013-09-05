@@ -1,5 +1,6 @@
 * {
 	font-family: sans-serif;
+	font-size: 10pt;
 }
 
 body, html {
@@ -7,34 +8,76 @@ body, html {
 	margin: 0px;
 }
 
+body {
+	background-color: #eee;
+}
+
 #main {
 	width: 85%;
 	margin: 7.5mm auto 10mm;
 	padding: 0px;
-	border: 1px solid black;
-	border-top: none;
-}
-
-#nav, #footer {
-	color: white;
-	background-color: black;
-	font-size: 10pt;
-}
-
-#nav a, #footer a {
-	color: white;
 }
 
 #content {
-	margin: 1mm 2mm 1mm;
+	background-color: white;
+	margin: 0px;
+	padding: 1mm 2mm 4mm;
+	border: 1px solid #888;
+	border-top: none;
 }
 
 #footer {
+	font-size: 10pt;
+	margin: 5mm auto 0mm;
+	width: 100%;
 	text-align: center;
 }
 
+#nav {
+	position: relative;
+	color: white;
+	background-color: #888;
+	font-size: 10pt;
+	padding: 0mm;
+}
+
 #nav a {
+	color: white;
 	text-decoration: none;
+	padding: 2mm;
+	display: inline-block;
+}
+
+#nav ul {
+	display: inline;
+	position: absolute;
+	right: 0mm;
+	list-style: none;
+}
+
+#nav ul li {
+	display: inline;
+}
+
+#nav ul li:hover a {
+	background-color: #23a;
+}
+
+a.apptitle {
+	background-color: #23a;
+	letter-spacing: 0.2ex;
+}
+
+h1 {
+	font-size: 16pt;
+	padding: 0px;
+	margin: 1mm 0mm 2mm;
+}
+
+h2 {
+	font-size: 14pt;
+	padding: 0px;
+	margin: 1mm 0mm 2mm;
 }
 
 .fullwidth {
@@ -46,26 +89,27 @@ body, html {
 	font-style: italic;
 }
 
-#nav {
-	position: relative;
+table {
+	border-collapse: collapse;
 }
 
-#nav ul {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	list-style: none;
+table thead tr th {
+	border-bottom: 1px solid black;
+	text-align: left;
 }
 
-#nav ul li {
-	float: right;
-	padding: 0px 2mm 0px;
+table tbody tr td {
+	border-top: 1px solid #eee;
 }
 
-#nav ul li:hover {
-	background-color: white;
+table tbody tr:first-child td {
+	border-top: none;
 }
 
-#nav ul li:hover a {
-	color: black;
+table tbody tr:hover {
+	background-color: #eee;
+}
+
+input.quant {
+	width: 3em;
 }

@@ -2,6 +2,8 @@
 <head>
 	<title>{{template "title" .Data}} – mailremind</title>
 	<link rel="stylesheet" type="text/css" href="/static/style.css" />
+	<script type="text/javascript" src="/static/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/static/mailremind.js"></script>
 </head>
 <body>
 	<div id="main">

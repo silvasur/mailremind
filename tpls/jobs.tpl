@@ -32,7 +32,6 @@
 					</tr>{{end}}
 				</tbody>
 			</table>
-			<hr />
 			<p>
 				Delete selected:
 				<select name="Delconfirm" size="0">
