@@ -113,3 +113,10 @@ table tbody tr:hover {
 input.quant {
 	width: 3em;
 }
+
+.hint {
+	font-size: 8pt;
+	font-weight: normal;
+	font-style: italic;
+	color: #777;
+}

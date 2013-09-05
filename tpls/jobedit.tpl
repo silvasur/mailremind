@@ -25,9 +25,9 @@
 			<table class="fullwidth schedules">
 				<thead>
 					<tr>
-						<th>Start</th>
+						<th>Start<br /><span class="hint">(Format: YYYY-MM-DD HH:MM:SS)</span></th>
 						<th colspan="2">Repetition</th>
-						<th colspan="2">End</th>
+						<th colspan="2">End<br /><span class="hint">(Format: YYYY-MM-DD HH:MM:SS)</span></th>
 					</tr>
 				</thead>
 				<tbody>
