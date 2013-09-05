@@ -30,9 +30,9 @@ type jobsTpldata struct {
 	Fatal          bool
 }
 
-func jobs(user model.User, sess *sessions.Session, req *http.Request) interface{} {
+func jobs(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
 	if user == nil {
-		return &jobsTpldata{Error: "You need to be logged in to do that.", Fatal: true}
+		return &jobsTpldata{Error: "You need to be logged in to do that.", Fatal: true}, user
 	}
 
 	outdata := new(jobsTpldata)
@@ -77,5 +77,5 @@ listjobs:
 		outdata.Jobs[i] = jobToTpldata(job, user)
 	}
 
-	return outdata
+	return outdata, user
 }

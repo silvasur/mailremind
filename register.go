@@ -34,37 +34,37 @@ func genAcCode() string {
 	return string(code)
 }
 
-func register(user model.User, sess *sessions.Session, req *http.Request) interface{} {
+func register(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
 	outdata := &registerData{Timezones: &timeLocs}
 
 	if user != nil {
 		outdata.Success = "You are already logged in. To register a new account, first log out."
-		return outdata
+		return outdata, user
 	}
 
 	if req.Method != "POST" {
-		return outdata
+		return outdata, user
 	}
 
 	if err := req.ParseForm(); err != nil {
 		outdata.Error = "Data of form could not be understand. If this happens again, please contact support!"
-		return outdata
+		return outdata, user
 	}
 
 	indata := new(registerFormdata)
 	if err := formdec.Decode(indata, req.Form); (err != nil) || (indata.Mail == "") || (indata.Timezone.Loc == nil) {
 		outdata.Error = "Input data wrong or missing. Please fill in all values and make sure to provide a valid E-Mail address."
-		return outdata
+		return outdata, user
 	}
 
 	if indata.Password == "" {
 		outdata.Error = "Empty passwords are not allowed."
-		return outdata
+		return outdata, user
 	}
 
 	if indata.Password != indata.RetypePassword {
 		outdata.Error = "Passwords are not identical."
-		return outdata
+		return outdata, user
 	}
 
 	mail := string(indata.Mail)
@@ -72,12 +72,12 @@ func register(user model.User, sess *sessions.Session, req *http.Request) interf
 	switch _, err := dbcon.UserByMail(mail); err {
 	case nil:
 		outdata.Error = "This E-Mail address is already used."
-		return outdata
+		return outdata, user
 	case model.NotFound:
 	default:
 		log.Printf("Error while checking, if mail is used: %s", err)
 		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
-		return outdata
+		return outdata, user
 	}
 
 	acCode := genAcCode()
@@ -85,21 +85,21 @@ func register(user model.User, sess *sessions.Session, req *http.Request) interf
 	if err != nil {
 		log.Printf("Error while hashing password: %s", err)
 		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
-		return outdata
+		return outdata, user
 	}
 
 	user, err = dbcon.AddUser(mail, pwhash, indata.Timezone.Loc, false, acCode)
 	if err != nil {
 		log.Printf("Could not create user (%s): %s", indata.Mail, err)
 		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
-		return outdata
+		return outdata, user
 	}
 
 	if !SendActivationcode(mail, acCode, user.ID()) {
 		outdata.Error = "We could not send you a mail with your confirmation code."
-		return outdata
+		return outdata, user
 	}
 
 	outdata.Success = "Account created successfully! We sent you an E-Mail that contains a link to activate your account."
-	return outdata
+	return outdata, user
 }

@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type Handler func(user model.User, sess *sessions.Session, req *http.Request) interface{}
+type Handler func(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User)
 
 func getSess(req *http.Request) (*sessions.Session, error) {
 	sess, err := SessionStorage.Get(req, "mailremind-sess")
@@ -57,7 +57,7 @@ func mkHttpHandler(h Handler, tpl *template.Template) http.HandlerFunc {
 		}
 
 		user := userFromSess(sess)
-		outdata := h(user, sess, req)
+		outdata, user := h(user, sess, req)
 		mail := ""
 		if user != nil {
 			mail = user.Email()

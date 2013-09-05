@@ -181,9 +181,9 @@ func logfail(what string, err error) bool {
 	return true
 }
 
-func jobedit(user model.User, sess *sessions.Session, req *http.Request) interface{} {
+func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
 	if user == nil {
-		return &jobeditTpldata{Error: "You need to be logged in to do that.", Fatal: true}
+		return &jobeditTpldata{Error: "You need to be logged in to do that.", Fatal: true}, user
 	}
 
 	outdata := new(jobeditTpldata)
@@ -194,11 +194,11 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) interfa
 	if _id != "" {
 		id, err := db.ParseDBID(_id)
 		if err != nil {
-			return &jobeditTpldata{Error: "Job not found", Fatal: true}
+			return &jobeditTpldata{Error: "Job not found", Fatal: true}, user
 		}
 
 		if job, err = user.JobByID(id); err != nil {
-			return &jobeditTpldata{Error: "Job not found", Fatal: true}
+			return &jobeditTpldata{Error: "Job not found", Fatal: true}, user
 		}
 	}
 
@@ -210,12 +210,12 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) interfa
 		if (job == nil) && (user.CountJobs() >= jobsLimit) {
 			outdata.Error = "You have reached the limit of jobs per user."
 			outdata.Fatal = true
-			return outdata
+			return outdata, user
 		}
 
 		if err := req.ParseForm(); err != nil {
 			outdata.Error = "Could not understand forma data."
-			return outdata
+			return outdata, user
 		}
 
 		subject, content, mc, ok := outdata.interpretForm(req.Form, user)
@@ -242,5 +242,5 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) interfa
 		}
 	}
 
-	return outdata
+	return outdata, user
 }
