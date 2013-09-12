@@ -169,7 +169,14 @@ func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject 
 
 	if !ok {
 		jt.Error = "Some schedules were wrong (wrong time format, negative repetition counts)"
+		return
 	}
+
+	if len(mc) == 0 {
+		jt.Error = "No schedule."
+		ok = false
+	}
+
 	return
 }
 
@@ -221,7 +228,9 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interf
 		subject, content, mc, ok := outdata.interpretForm(req.Form, user)
 		if ok {
 			next := mc.NextAfter(time.Now())
-			if job != nil {
+			if next.IsZero() {
+				outdata.Error = "The schedule would not send any mail."
+			} else if job != nil {
 				if logfail("setting subject", job.SetSubject(subject)) &&
 					logfail("setting content", job.SetContent(content)) &&
 					logfail("setting chronos", job.SetChronos(mc)) &&
@@ -231,8 +240,7 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interf
 					outdata.Error = "Could not save everything."
 				}
 			} else {
-				var err error
-				if job, err = user.AddJob(subject, content, mc, next); logfail("creating new job", err) {
+				if job, err := user.AddJob(subject, content, mc, next); logfail("creating new job", err) {
 					outdata.fillFromJob(job, user)
 					outdata.Success = "Job created"
 				} else {
