@@ -13,6 +13,7 @@
 				{{if .Mail}}
 					<li><a href="/jobedit">new job</a></li>
 					<li><a href="/jobs">list jobs</a></li>
+					<li><a href="/settings">settings</a></li>
 					<li><a href="/logout">logout</a></li>
 				{{else}}
 					<li><a href="/register">register</a></li>

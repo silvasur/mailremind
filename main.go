@@ -94,6 +94,7 @@ func main() {
 	router.HandleFunc("/jobs", mkHttpHandler(jobs, tplJobs))
 	router.HandleFunc("/jobedit", mkHttpHandler(jobedit, tplJobedit))
 	router.HandleFunc("/jobedit/{ID}", mkHttpHandler(jobedit, tplJobedit))
+	router.HandleFunc("/settings", mkHttpHandler(settings, tplSettings))
 
 	http.Handle("/", router)
 
