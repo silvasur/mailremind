@@ -8,10 +8,17 @@ import (
 	"time"
 )
 
-const checkInterval = 30 // TODO: Make this configurable
+var checkInterval int64
+
+func initCheckmails() {
+	var err error
+	if checkInterval, err = conf.GetInt("schedules", "checkInterval"); err != nil {
+		log.Fatalf("Could not read config schedules.checkInterval: %s", err)
+	}
+}
 
 func checkmails() {
-	ticker := time.NewTicker(checkInterval * time.Second)
+	ticker := time.NewTicker(time.Duration(checkInterval) * time.Second)
 
 	for {
 		t := <-ticker.C

@@ -78,6 +78,7 @@ func main() {
 		log.Fatalf("Could not get net.laddr config: %s", err)
 	}
 
+	initCheckmails()
 	go checkmails()
 
 	router := mux.NewRouter()
