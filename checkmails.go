@@ -18,11 +18,17 @@ func initCheckmails() {
 }
 
 func checkmails() {
-	ticker := time.NewTicker(time.Duration(checkInterval) * time.Second)
+	timech := make(chan time.Time)
+	go func(ch chan time.Time) {
+		ticker := time.NewTicker(time.Duration(checkInterval) * time.Second)
 
-	for {
-		t := <-ticker.C
+		ch <- time.Now()
+		for t := range ticker.C {
+			ch <- t
+		}
+	}(timech)
 
+	for t := range timech {
 		jobs := dbcon.JobsBefore(t)
 
 		for _, job := range jobs {
