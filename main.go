@@ -66,6 +66,7 @@ func main() {
 	initMailing()
 	initMails()
 	initDB()
+	initLimits()
 	defer dbcon.Close()
 
 	staticpath, err := conf.GetString("paths", "static")

@@ -53,11 +53,22 @@ func chronToSchedTL(chron chronos.Chronos, u model.User) scheduleTpldata {
 	return schedule
 }
 
-// TODO: Make these constants variable (config file or something...)
-const (
-	maxSchedules = 10
-	jobsLimit    = 100
-)
+var maxSchedules, jobsLimit int
+
+func initLimits() {
+	schedules, err := conf.GetInt("limits", "schedules")
+	if err != nil {
+		log.Fatalf("Could not read config limits.schedules: %s", err)
+	}
+
+	jobs, err := conf.GetInt("limits", "jobs")
+	if err != nil {
+		log.Fatalf("Could not read config limits.jobs: %s", err)
+	}
+
+	maxSchedules = int(schedules)
+	jobsLimit = int(jobs)
+}
 
 const bestTimeFmtEver = "2006-01-02 15:04:05"
 
@@ -65,16 +76,17 @@ type jobeditTpldata struct {
 	Error, Success          string
 	Fatal                   bool
 	JobID, Subject, Content string
-	Schedules               [maxSchedules]scheduleTpldata
+	Schedules               []scheduleTpldata
 }
 
 func (jt *jobeditTpldata) fillFromJob(job model.Job, u model.User) {
 	jt.JobID = job.ID().String()
 	jt.Subject = job.Subject()
 	jt.Content = string(job.Content())
+	jt.Schedules = make([]scheduleTpldata, maxSchedules)
 
 	for i, chron := range job.Chronos() {
-		if i == 10 {
+		if i == maxSchedules {
 			log.Printf("Job %s has more than %d Chronos entries!", job.ID(), maxSchedules)
 			break
 		}
@@ -193,7 +205,7 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interf
 		return &jobeditTpldata{Error: "You need to be logged in to do that.", Fatal: true}, user
 	}
 
-	outdata := new(jobeditTpldata)
+	outdata := &jobeditTpldata{Schedules: make([]scheduleTpldata, maxSchedules)}
 
 	// Try to load job, if given
 	_id := mux.Vars(req)["ID"]
