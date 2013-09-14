@@ -79,8 +79,8 @@ func main() {
 		log.Fatalf("Could not get net.laddr config: %s", err)
 	}
 
-	initCheckmails()
-	go checkmails()
+	initCheckjobs()
+	go checkjobs()
 
 	router := mux.NewRouter()
 	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(staticpath))))

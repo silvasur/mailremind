@@ -10,14 +10,14 @@ import (
 
 var checkInterval int64
 
-func initCheckmails() {
+func initCheckjobs() {
 	var err error
 	if checkInterval, err = conf.GetInt("schedules", "checkInterval"); err != nil {
 		log.Fatalf("Could not read config schedules.checkInterval: %s", err)
 	}
 }
 
-func checkmails() {
+func checkjobs() {
 	timech := make(chan time.Time)
 	go func(ch chan time.Time) {
 		ticker := time.NewTicker(time.Duration(checkInterval) * time.Second)
@@ -29,19 +29,29 @@ func checkmails() {
 	}(timech)
 
 	for t := range timech {
-		jobs := dbcon.JobsBefore(t)
+		checkjobsOnce(t)
+	}
+}
 
-		for _, job := range jobs {
-			if sendjob(job, t) {
-				next := job.Chronos().NextAfter(t)
-				if next.IsZero() {
-					if err := job.Delete(); err != nil {
-						log.Printf("Failed deleting job %s after job was done: %s", job.ID(), err)
-					}
-				} else {
-					if err := job.SetNext(next); err != nil {
-						log.Printf("Filed setting next for job %s: %s", job.ID(), err)
-					}
+func checkjobsOnce(t time.Time) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("!! recovered from panic in checkjobsOnce: %s", r)
+		}
+	}()
+
+	jobs := dbcon.JobsBefore(t)
+
+	for _, job := range jobs {
+		if sendjob(job, t) {
+			next := job.Chronos().NextAfter(t)
+			if next.IsZero() {
+				if err := job.Delete(); err != nil {
+					log.Printf("Failed deleting job %s after job was done: %s", job.ID(), err)
+				}
+			} else {
+				if err := job.SetNext(next); err != nil {
+					log.Printf("Filed setting next for job %s: %s", job.ID(), err)
 				}
 			}
 		}

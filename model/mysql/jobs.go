@@ -134,7 +134,8 @@ func (j *Job) Next() time.Time               { return j.next }
 func (j *Job) User() model.User {
 	u, err := j.con.UserByID(j.user)
 	if err != nil {
-		// TODO: Should we really panic here? If yes, we need to recover panics!
+		// We panic here, since the user must exist, if the job is there.
+		// Since http handlers and the job handler do recover from panics, this should be okay.
 		panic(fmt.Errorf("Could not get user (%d) of Job %d: %s", j.user, j.id, err))
 	}
 
@@ -185,7 +186,7 @@ func (j *Job) Delete() error {
 func (con *MySQLDBCon) JobsBefore(t time.Time) (jobs []model.Job) {
 	rows, err := con.stmt[qJobsBefore].Query(t.Unix())
 	if err != nil {
-		log.Fatalf("Could not get jobs before %s: %s", t, err) // TODO: Really fatal?
+		log.Fatalf("Could not get jobs before %s: %s", t, err)
 	}
 
 	for rows.Next() {
