@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/kch42/simpleconf"
+	"kch42.de/gostuff/mailremind/confhelper"
 	_ "kch42.de/gostuff/mailremind/model/mysql"
 	"log"
 	"math/rand"
@@ -24,19 +25,13 @@ var baseurl string
 var SessionStorage sessions.Store
 
 func initSessions() {
-	_auth, err := conf.GetString("securecookies", "auth")
-	if err != nil {
-		log.Fatalf("Could not get securecookies.auth from config: %s", err)
-	}
+	_auth := confhelper.ConfStringOrFatal(conf, "securecookies", "auth")
 	auth, err := hex.DecodeString(_auth)
 	if err != nil {
 		log.Fatalf("Could not decode securecookies.auth as hex: %s", err)
 	}
 
-	_crypt, err := conf.GetString("securecookies", "crypt")
-	if err != nil {
-		log.Fatalf("Could not get securecookies.crypt from config: %s", err)
-	}
+	_crypt := confhelper.ConfStringOrFatal(conf, "securecookies", "crypt")
 	crypt, err := hex.DecodeString(_crypt)
 	if err != nil {
 		log.Fatalf("Could not decode securecookies.auth as hex: %s", err)
@@ -54,9 +49,7 @@ func main() {
 		log.Fatalf("Could not read config: %s", err)
 	}
 
-	if baseurl, err = conf.GetString("web", "baseurl"); err != nil {
-		log.Fatalf("Could not get web.baseurl from config: %s", err)
-	}
+	baseurl = confhelper.ConfStringOrFatal(conf, "web", "baseurl")
 
 	rand.Seed(time.Now().UnixNano())
 
@@ -69,15 +62,8 @@ func main() {
 	initLimits()
 	defer dbcon.Close()
 
-	staticpath, err := conf.GetString("paths", "static")
-	if err != nil {
-		log.Fatalf("Could not get paths.static config: %s", err)
-	}
-
-	laddr, err := conf.GetString("net", "laddr")
-	if err != nil {
-		log.Fatalf("Could not get net.laddr config: %s", err)
-	}
+	staticpath := confhelper.ConfStringOrFatal(conf, "paths", "static")
+	laddr := confhelper.ConfStringOrFatal(conf, "net", "laddr")
 
 	initCheckjobs()
 	go checkjobs()

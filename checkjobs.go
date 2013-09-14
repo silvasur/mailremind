@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"kch42.de/gostuff/mailremind/confhelper"
 	"kch42.de/gostuff/mailremind/model"
 	"log"
 	"time"
@@ -11,10 +12,7 @@ import (
 var checkInterval int64
 
 func initCheckjobs() {
-	var err error
-	if checkInterval, err = conf.GetInt("schedules", "checkInterval"); err != nil {
-		log.Fatalf("Could not read config schedules.checkInterval: %s", err)
-	}
+	checkInterval = confhelper.ConfIntOrFatal(conf, "schedules", "checkInterval")
 }
 
 func checkjobs() {

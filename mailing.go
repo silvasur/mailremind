@@ -1,6 +1,7 @@
 package main
 
 import (
+	"kch42.de/gostuff/mailremind/confhelper"
 	"kch42.de/gostuff/mailremind/mailing"
 	"log"
 )
@@ -22,21 +23,10 @@ func Mail(to, from string, msg []byte) bool {
 }
 
 func initMailing() {
-	meth, err := conf.GetString("mail", "method")
-	if err != nil {
-		log.Fatalf("Could not get mail.method from config: %s", err)
-	}
+	meth := confhelper.ConfStringOrFatal(conf, "mail", "method")
+	MailFrom = confhelper.ConfStringOrFatal(conf, "mail", "addr")
 
-	MailFrom, err = conf.GetString("mail", "addr")
-	if err != nil {
-		log.Fatalf("Could not get mail.addr from config: %s", err)
-	}
-
-	parallel, err := conf.GetInt("mail", "parallel")
-	if err != nil {
-		log.Fatalf("Could not get mail.parallel from config: %s", err)
-	}
-
+	parallel := confhelper.ConfIntOrFatal(conf, "mail", "parallel")
 	if parallel <= 0 {
 		log.Fatalln("mail.parallel must be > 0")
 	}

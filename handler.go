@@ -52,8 +52,9 @@ func mkHttpHandler(h Handler, tpl *template.Template) http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		sess, err := getSess(req)
 		if err != nil {
+			req.Cookies()
 			log.Printf("Error while getting session: %s", err)
-			rw.Write([]byte("Unable to create session")) // TODO: Better error message...
+			rw.Write([]byte("Unable to create a session. Try reloading the page or delete the cookies for this site."))
 		}
 
 		user := userFromSess(sess)

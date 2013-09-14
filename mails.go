@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"kch42.de/gostuff/mailremind/confhelper"
 	"kch42.de/gostuff/mailremind/model"
 	"log"
 	"path"
@@ -24,10 +25,7 @@ var (
 )
 
 func initMails() {
-	tplroot, err := conf.GetString("paths", "mailtpls")
-	if err != nil {
-		log.Fatalf("Could not get paths.mailtpls from config: %s", err)
-	}
+	tplroot := confhelper.ConfStringOrFatal(conf, "paths", "mailtpls")
 
 	mailActivationcode = loadMailTpl(tplroot, "activationcode")
 	mailPwreset = loadMailTpl(tplroot, "pwreset")

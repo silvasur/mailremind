@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"kch42.de/gostuff/mailremind/confhelper"
 	"log"
 	"path"
 )
@@ -29,10 +30,7 @@ var (
 )
 
 func initTpls() {
-	tplpath, err := conf.GetString("paths", "tpls")
-	if err != nil {
-		log.Fatalf("Could not get paths.tpls config: %s", err)
-	}
+	tplpath := confhelper.ConfStringOrFatal(conf, "paths", "tpls")
 
 	tplRegister = loadTpl(tplpath, "register")
 	tplMsg = loadTpl(tplpath, "msg")

@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"kch42.de/gostuff/mailremind/chronos"
+	"kch42.de/gostuff/mailremind/confhelper"
 	"kch42.de/gostuff/mailremind/model"
 	"log"
 	"net/http"
@@ -56,18 +57,8 @@ func chronToSchedTL(chron chronos.Chronos, u model.User) scheduleTpldata {
 var maxSchedules, jobsLimit int
 
 func initLimits() {
-	schedules, err := conf.GetInt("limits", "schedules")
-	if err != nil {
-		log.Fatalf("Could not read config limits.schedules: %s", err)
-	}
-
-	jobs, err := conf.GetInt("limits", "jobs")
-	if err != nil {
-		log.Fatalf("Could not read config limits.jobs: %s", err)
-	}
-
-	maxSchedules = int(schedules)
-	jobsLimit = int(jobs)
+	maxSchedules = int(confhelper.ConfIntOrFatal(conf, "limits", "schedules"))
+	jobsLimit = int(confhelper.ConfIntOrFatal(conf, "limits", "jobs"))
 }
 
 const bestTimeFmtEver = "2006-01-02 15:04:05"
