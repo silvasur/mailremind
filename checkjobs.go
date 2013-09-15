@@ -42,7 +42,7 @@ func checkjobsOnce(t time.Time) {
 
 	for _, job := range jobs {
 		if sendjob(job, t) {
-			next := job.Chronos().NextAfter(t)
+			next := job.Schedule().NextAfter(t)
 			if next.IsZero() {
 				if err := job.Delete(); err != nil {
 					log.Printf("Failed deleting job %s after job was done: %s", job.ID(), err)

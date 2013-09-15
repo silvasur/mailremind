@@ -1,4 +1,4 @@
-package chronos
+package schedule
 
 import (
 	"errors"
@@ -149,14 +149,14 @@ func (f Frequency) addTo(t time.Time, mul uint) time.Time {
 func (f Frequency) minApprox() time.Duration { return time.Duration(f.Count) * f.Unit.minApprox() }
 func (f Frequency) maxApprox() time.Duration { return time.Duration(f.Count) * f.Unit.maxApprox() }
 
-// Chronos describes a time schedule. It has a start and optional end point and an optional frequency.
-type Chronos struct {
+// Schedule describes a time schedule. It has a start and optional end point and an optional frequency.
+type Schedule struct {
 	Start, End time.Time
 	Freq       Frequency
 }
 
 // NextAfter calculates the next time in the schedule after t. If no such time exists, nil is returned (test with Time.IsZero()).
-func (c Chronos) NextAfter(t time.Time) time.Time {
+func (c Schedule) NextAfter(t time.Time) time.Time {
 	if !t.After(c.Start) {
 		return c.Start
 	}
@@ -183,7 +183,7 @@ func (c Chronos) NextAfter(t time.Time) time.Time {
 	return nilTime // Should actually never happen...
 }
 
-func (c Chronos) String() string {
+func (c Schedule) String() string {
 	s := c.Start.UTC().Format(timefmt)
 	if c.Freq.Count > 0 {
 		s += " +" + c.Freq.String()
@@ -194,7 +194,7 @@ func (c Chronos) String() string {
 	return s
 }
 
-func ParseChronos(s string) (c Chronos, err error) {
+func ParseSchedule(s string) (c Schedule, err error) {
 	elems := strings.Split(s, " ")
 
 	switch len(elems) {
@@ -222,15 +222,15 @@ func ParseChronos(s string) (c Chronos, err error) {
 			return
 		}
 	default:
-		err = errors.New("Unknown chronos format")
+		err = errors.New("Unknown schedule format")
 	}
 
 	return
 }
 
-type MultiChronos []Chronos
+type MultiSchedule []Schedule
 
-func (mc MultiChronos) NextAfter(t time.Time) time.Time {
+func (mc MultiSchedule) NextAfter(t time.Time) time.Time {
 	var nearest time.Time
 
 	for _, c := range mc {
@@ -249,7 +249,7 @@ func (mc MultiChronos) NextAfter(t time.Time) time.Time {
 	return nearest
 }
 
-func (mc MultiChronos) String() (s string) {
+func (mc MultiSchedule) String() (s string) {
 	sep := ""
 
 	for _, c := range mc {
@@ -260,7 +260,7 @@ func (mc MultiChronos) String() (s string) {
 	return
 }
 
-func ParseMultiChronos(s string) (mc MultiChronos, err error) {
+func ParseMultiSchedule(s string) (mc MultiSchedule, err error) {
 	parts := strings.Split(s, "\n")
 	for l, _part := range parts {
 		part := strings.TrimSpace(_part)
@@ -268,7 +268,7 @@ func ParseMultiChronos(s string) (mc MultiChronos, err error) {
 			continue
 		}
 
-		c, err := ParseChronos(part)
+		c, err := ParseSchedule(part)
 		if err != nil {
 			return nil, fmt.Errorf("Line %d: %s", l+1, err)
 		}

@@ -1,4 +1,4 @@
-package chronos
+package schedule
 
 import (
 	"testing"
@@ -9,11 +9,11 @@ func mktime(y int, month time.Month, d, h, min int) time.Time {
 	return time.Date(y, month, d, h, min, 0, 0, time.UTC)
 }
 
-func TestChronos(t *testing.T) {
+func TestSchedule(t *testing.T) {
 	tbl := []struct {
-		chronos string
-		now     time.Time
-		want    time.Time
+		schedule string
+		now      time.Time
+		want     time.Time
 	}{
 		{"1991-04-30 00:00:00 +1 Year", mktime(2013, 8, 26, 13, 37), mktime(2014, 4, 30, 0, 0)},
 		{"2013-01-01 00:00:00", mktime(2013, 8, 26, 13, 37), nilTime},
@@ -27,9 +27,9 @@ func TestChronos(t *testing.T) {
 	}
 
 	for i, e := range tbl {
-		c, err := ParseChronos(e.chronos)
+		c, err := ParseSchedule(e.schedule)
 		if err != nil {
-			t.Errorf("#%d: Failed parsing \"%s\": %s", i, e.chronos, err)
+			t.Errorf("#%d: Failed parsing \"%s\": %s", i, e.schedule, err)
 			continue
 		}
 		have := c.NextAfter(e.now)
@@ -37,8 +37,8 @@ func TestChronos(t *testing.T) {
 			t.Errorf("#%d: Want: %s, Have: %s", i, e.want, have)
 		}
 
-		if s := c.String(); s != e.chronos {
-			t.Errorf("#%d: String() failed: \"%s\" != \"%s\"", i, e.chronos, s)
+		if s := c.String(); s != e.schedule {
+			t.Errorf("#%d: String() failed: \"%s\" != \"%s\"", i, e.schedule, s)
 		}
 
 	}

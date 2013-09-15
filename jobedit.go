@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"kch42.de/gostuff/mailremind/chronos"
 	"kch42.de/gostuff/mailremind/confhelper"
 	"kch42.de/gostuff/mailremind/model"
+	"kch42.de/gostuff/mailremind/schedule"
 	"log"
 	"net/http"
 	"net/url"
@@ -20,38 +20,38 @@ type scheduleTpldata struct {
 	RepetitionEnabled, EndEnabled                                            bool
 }
 
-func chronToSchedTL(chron chronos.Chronos, u model.User) scheduleTpldata {
+func schedToSchedTL(sched schedule.Schedule, u model.User) scheduleTpldata {
 	loc := u.Location()
 
-	schedule := scheduleTpldata{
-		Start: chron.Start.In(loc).Format(bestTimeFmtEver),
+	schedtl := scheduleTpldata{
+		Start: sched.Start.In(loc).Format(bestTimeFmtEver),
 	}
 
-	if f := chron.Freq; f.Count > 0 {
-		schedule.RepetitionEnabled = true
-		schedule.Count = int(f.Count)
+	if f := sched.Freq; f.Count > 0 {
+		schedtl.RepetitionEnabled = true
+		schedtl.Count = int(f.Count)
 		switch f.Unit {
-		case chronos.Minute:
-			schedule.UnitIsMinute = true
-		case chronos.Hour:
-			schedule.UnitIsHour = true
-		case chronos.Day:
-			schedule.UnitIsDay = true
-		case chronos.Week:
-			schedule.UnitIsWeek = true
-		case chronos.Month:
-			schedule.UnitIsMonth = true
-		case chronos.Year:
-			schedule.UnitIsYear = true
+		case schedule.Minute:
+			schedtl.UnitIsMinute = true
+		case schedule.Hour:
+			schedtl.UnitIsHour = true
+		case schedule.Day:
+			schedtl.UnitIsDay = true
+		case schedule.Week:
+			schedtl.UnitIsWeek = true
+		case schedule.Month:
+			schedtl.UnitIsMonth = true
+		case schedule.Year:
+			schedtl.UnitIsYear = true
 		}
 	}
 
-	if end := chron.End; !end.IsZero() {
-		schedule.EndEnabled = true
-		schedule.End = end.In(loc).Format(bestTimeFmtEver)
+	if end := sched.End; !end.IsZero() {
+		schedtl.EndEnabled = true
+		schedtl.End = end.In(loc).Format(bestTimeFmtEver)
 	}
 
-	return schedule
+	return schedtl
 }
 
 var maxSchedules, jobsLimit int
@@ -76,17 +76,17 @@ func (jt *jobeditTpldata) fillFromJob(job model.Job, u model.User) {
 	jt.Content = string(job.Content())
 	jt.Schedules = make([]scheduleTpldata, maxSchedules)
 
-	for i, chron := range job.Chronos() {
+	for i, sched := range job.Schedule() {
 		if i == maxSchedules {
-			log.Printf("Job %s has more than %d Chronos entries!", job.ID(), maxSchedules)
+			log.Printf("Job %s has more than %d schedule entries!", job.ID(), maxSchedules)
 			break
 		}
 
-		jt.Schedules[i] = chronToSchedTL(chron, u)
+		jt.Schedules[i] = schedToSchedTL(sched, u)
 	}
 }
 
-func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject string, content []byte, mc chronos.MultiChronos, ok bool) {
+func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject string, content []byte, ms schedule.MultiSchedule, ok bool) {
 	loc := u.Location()
 
 	l1 := len(form["Start"])
@@ -124,7 +124,7 @@ func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject 
 		}
 
 		count := uint64(0)
-		var unit chronos.TimeUnit
+		var unit schedule.TimeUnit
 		var end time.Time
 		if form["RepetitionEnabled"][i] == "yes" {
 			if count, err = strconv.ParseUint(form["Count"][i], 10, 64); err != nil {
@@ -134,17 +134,17 @@ func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject 
 
 			switch form["Unit"][i] {
 			case "Minute":
-				unit = chronos.Minute
+				unit = schedule.Minute
 			case "Hour":
-				unit = chronos.Hour
+				unit = schedule.Hour
 			case "Day":
-				unit = chronos.Day
+				unit = schedule.Day
 			case "Week":
-				unit = chronos.Week
+				unit = schedule.Week
 			case "Month":
-				unit = chronos.Month
+				unit = schedule.Month
 			case "Year":
-				unit = chronos.Year
+				unit = schedule.Year
 			default:
 				ok = false
 				continue
@@ -158,16 +158,16 @@ func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject 
 			}
 		}
 
-		chron := chronos.Chronos{
+		sched := schedule.Schedule{
 			Start: start,
-			Freq: chronos.Frequency{
+			Freq: schedule.Frequency{
 				Count: uint(count),
 				Unit:  unit,
 			},
 			End: end,
 		}
-		mc = append(mc, chron)
-		jt.Schedules[i] = chronToSchedTL(chron, u)
+		ms = append(ms, sched)
+		jt.Schedules[i] = schedToSchedTL(sched, u)
 	}
 
 	if !ok {
@@ -175,7 +175,7 @@ func (jt *jobeditTpldata) interpretForm(form url.Values, u model.User) (subject 
 		return
 	}
 
-	if len(mc) == 0 {
+	if len(ms) == 0 {
 		jt.Error = "No schedule."
 		ok = false
 	}
@@ -236,7 +236,7 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interf
 			} else if job != nil {
 				if logfail("setting subject", job.SetSubject(subject)) &&
 					logfail("setting content", job.SetContent(content)) &&
-					logfail("setting chronos", job.SetChronos(mc)) &&
+					logfail("setting schedule", job.SetSchedule(mc)) &&
 					logfail("setting next", job.SetNext(next)) {
 					outdata.Success = "Changes saved"
 				} else {

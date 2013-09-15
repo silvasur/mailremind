@@ -3,8 +3,8 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"kch42.de/gostuff/mailremind/chronos"
 	"kch42.de/gostuff/mailremind/model"
+	"kch42.de/gostuff/mailremind/schedule"
 	"log"
 	"time"
 )
@@ -17,7 +17,7 @@ type Job struct {
 	subject string
 	content []byte
 	next    time.Time
-	chron   []chronos.Chronos
+	sched   schedule.MultiSchedule
 }
 
 func jobFromSQL(con *MySQLDBCon, s scanner) (*Job, error) {
@@ -25,13 +25,13 @@ func jobFromSQL(con *MySQLDBCon, s scanner) (*Job, error) {
 	var subject string
 	var content []byte
 	var _next int64
-	var _mchron string
+	var _msched string
 
-	if err := s.Scan(&_id, &_user, &subject, &content, &_next, &_mchron); err != nil {
+	if err := s.Scan(&_id, &_user, &subject, &content, &_next, &_msched); err != nil {
 		return nil, err
 	}
 
-	chron, err := chronos.ParseMultiChronos(_mchron)
+	sched, err := schedule.ParseMultiSchedule(_msched)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func jobFromSQL(con *MySQLDBCon, s scanner) (*Job, error) {
 		subject: subject,
 		content: content,
 		next:    time.Unix(_next, 0),
-		chron:   chron,
+		sched:   sched,
 	}, nil
 }
 
@@ -90,7 +90,7 @@ func (u *User) JobByID(_id model.DBID) (model.Job, error) {
 	}
 }
 
-func (u *User) AddJob(subject string, content []byte, chron chronos.MultiChronos, next time.Time) (model.Job, error) {
+func (u *User) AddJob(subject string, content []byte, sched schedule.MultiSchedule, next time.Time) (model.Job, error) {
 	tx, err := u.con.con.Begin()
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (u *User) AddJob(subject string, content []byte, chron chronos.MultiChronos
 
 	insjob := tx.Stmt(u.con.stmt[qInsertJob])
 
-	res, err := insjob.Exec(uint64(u.id), subject, content, next.Unix(), chron.String())
+	res, err := insjob.Exec(uint64(u.id), subject, content, next.Unix(), sched.String())
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -121,15 +121,15 @@ func (u *User) AddJob(subject string, content []byte, chron chronos.MultiChronos
 		subject: subject,
 		content: content,
 		next:    next,
-		chron:   chron,
+		sched:   sched,
 	}, nil
 }
 
-func (j *Job) ID() model.DBID                { return j.id }
-func (j *Job) Subject() string               { return j.subject }
-func (j *Job) Content() []byte               { return j.content }
-func (j *Job) Chronos() chronos.MultiChronos { return j.chron }
-func (j *Job) Next() time.Time               { return j.next }
+func (j *Job) ID() model.DBID                   { return j.id }
+func (j *Job) Subject() string                  { return j.subject }
+func (j *Job) Content() []byte                  { return j.content }
+func (j *Job) Schedule() schedule.MultiSchedule { return j.sched }
+func (j *Job) Next() time.Time                  { return j.next }
 
 func (j *Job) User() model.User {
 	u, err := j.con.UserByID(j.user)
@@ -160,12 +160,12 @@ func (j *Job) SetContent(cont []byte) error {
 	return nil
 }
 
-func (j *Job) SetChronos(chron chronos.MultiChronos) error {
-	if _, err := j.con.stmt[qSetChronos].Exec(chron.String(), uint64(j.id)); err != nil {
+func (j *Job) SetSchedule(sched schedule.MultiSchedule) error {
+	if _, err := j.con.stmt[qSetSchedule].Exec(sched.String(), uint64(j.id)); err != nil {
 		return err
 	}
 
-	j.chron = chron
+	j.sched = sched
 	return nil
 }
 

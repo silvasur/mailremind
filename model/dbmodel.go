@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
-	"kch42.de/gostuff/mailremind/chronos"
+	"kch42.de/gostuff/mailremind/schedule"
 	"sync"
 	"time"
 )
@@ -23,7 +23,7 @@ type User interface {
 	PWHash() []byte
 	SetPWHash([]byte) error
 
-	AddJob(subject string, content []byte, chron chronos.MultiChronos, next time.Time) (Job, error)
+	AddJob(subject string, content []byte, sched schedule.MultiSchedule, next time.Time) (Job, error)
 	Jobs() []Job
 	JobByID(DBID) (Job, error)
 	CountJobs() int
@@ -50,8 +50,8 @@ type Job interface {
 	Content() []byte
 	SetContent([]byte) error
 
-	Chronos() chronos.MultiChronos
-	SetChronos(chronos.MultiChronos) error
+	Schedule() schedule.MultiSchedule
+	SetSchedule(schedule.MultiSchedule) error
 
 	Next() time.Time
 	SetNext(time.Time) error

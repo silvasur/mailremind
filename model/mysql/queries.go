@@ -19,14 +19,14 @@ const (
 	qJobsBefore
 	qInsertJob
 	qInsertUser
-	qSetChronos
+	qSetSchedule
 	qSetLocation
 	qEnd
 )
 
 const (
 	qfragSelUser = "SELECT `id`, `email`, `passwd`, `location`, `active`, `activationcode`, `added` FROM `users` "
-	qfragSelJob  = "SELECT `id`, `user`, `subject`, `content`, `next`, `chronos` FROM `jobs` "
+	qfragSelJob  = "SELECT `id`, `user`, `subject`, `content`, `next`, `schedule` FROM `jobs` "
 )
 
 var queries = map[int]string{
@@ -46,8 +46,8 @@ var queries = map[int]string{
 	qSetNext:             "UPDATE `jobs` SET `next` = ? WHERE `id` = ?",
 	qDelJob:              "DELETE FROM `jobs` WHERE `id` = ?",
 	qJobsBefore:          qfragSelJob + "WHERE `next` <= ?",
-	qInsertJob:           "INSERT INTO `jobs` (`user`, `subject`, `content`, `next`, `chronos`) VALUES (?, ?, ?, ?, ?)",
+	qInsertJob:           "INSERT INTO `jobs` (`user`, `subject`, `content`, `next`, `schedule`) VALUES (?, ?, ?, ?, ?)",
 	qInsertUser:          "INSERT INTO `users` (`email`, `passwd`, `location`, `active`, `activationcode`, `added`) VALUES (?, ?, ?, ?, ?, ?)",
-	qSetChronos:          "UPDATE `jobs` SET `chronos` = ? WHERE `id` = ?",
+	qSetSchedule:         "UPDATE `jobs` SET `schedule` = ? WHERE `id` = ?",
 	qSetLocation:         "UPDATE `users` SET `location` = ? WHERE `id` = ?",
 }
