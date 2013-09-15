@@ -61,14 +61,6 @@ func login(user model.User, sess *sessions.Session, req *http.Request) (interfac
 	return outdata, user
 }
 
-func logincheck(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
-	outdata := &msgTpldata{Msg: "<nil>"}
-	if user != nil {
-		outdata.Msg = user.Email()
-	}
-	return outdata, user
-}
-
 func logout(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
 	delete(sess.Values, "uid")
 	return &msgTpldata{Class: "success", Title: "Logout", Msg: "Your are now logged out."}, nil

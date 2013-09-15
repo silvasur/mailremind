@@ -73,7 +73,6 @@ func main() {
 	router.HandleFunc("/register", mkHttpHandler(register, tplRegister))
 	router.HandleFunc("/activate", mkHttpHandler(activate, tplMsg))
 	router.HandleFunc("/login", mkHttpHandler(login, tplLogin))
-	router.HandleFunc("/logincheck", mkHttpHandler(logincheck, tplMsg))
 	router.HandleFunc("/logout", mkHttpHandler(logout, tplMsg))
 	router.HandleFunc("/delete-acc/yes", mkHttpHandler(deleteacc, tplMsg))
 	router.HandleFunc("/delete-acc", mkHttpHandler(deleteask, tplReallyDelete))
