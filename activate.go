@@ -33,7 +33,7 @@ func activate(user model.User, sess *sessions.Session, req *http.Request) (inter
 		return outdata, user
 	default:
 		log.Printf("Error while getting user by ID <%s>: %s", userid, err)
-		outdata.Msg = "An error occurred while loading user data. Send a message to the support, if this happens again."
+		outdata.Msg = "An unknown error occurred while loading user data."
 		return outdata, user
 	}
 
@@ -44,13 +44,13 @@ func activate(user model.User, sess *sessions.Session, req *http.Request) (inter
 
 	if err := user.SetActivationCode(""); err != nil {
 		log.Printf("Error while resetting activation code: %s", err)
-		outdata.Msg = "An error occurred while activating the user. Send a message to the support, if this happens again."
+		outdata.Msg = "An unknown error occurred while activating the user."
 		return outdata, user
 	}
 
 	if err := user.SetActive(true); err != nil {
 		log.Printf("Error while resetting activation code: %s", err)
-		outdata.Msg = "An error occurred while activating the user. Send a message to the support, if this happens again."
+		outdata.Msg = "An unknown error occurred while activating the user."
 		return outdata, user
 	}
 

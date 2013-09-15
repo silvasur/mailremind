@@ -50,7 +50,7 @@ func settings(user model.User, sess *sessions.Session, req *http.Request) (inter
 		hash, err := bcrypt.GenerateFromPassword([]byte(req.FormValue("Password")), bcrypt.DefaultCost)
 		if err != nil {
 			log.Printf("Error hashing password: %s", err)
-			outdata.Error = "Error while hashing password data."
+			outdata.Error = "Error while saving password."
 			return outdata.Error, user
 		}
 

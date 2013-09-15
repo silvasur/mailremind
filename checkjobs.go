@@ -49,7 +49,7 @@ func checkjobsOnce(t time.Time) {
 				}
 			} else {
 				if err := job.SetNext(next); err != nil {
-					log.Printf("Filed setting next for job %s: %s", job.ID(), err)
+					log.Printf("Failed setting next for job %s: %s", job.ID(), err)
 				}
 			}
 		}

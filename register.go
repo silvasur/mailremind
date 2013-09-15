@@ -47,7 +47,7 @@ func register(user model.User, sess *sessions.Session, req *http.Request) (inter
 	}
 
 	if err := req.ParseForm(); err != nil {
-		outdata.Error = "Data of form could not be understand. If this happens again, please contact support!"
+		outdata.Error = "Form data corrupted."
 		return outdata, user
 	}
 
@@ -76,7 +76,7 @@ func register(user model.User, sess *sessions.Session, req *http.Request) (inter
 	case model.NotFound:
 	default:
 		log.Printf("Error while checking, if mail is used: %s", err)
-		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
+		outdata.Error = "Internal error, sorry."
 		return outdata, user
 	}
 
@@ -84,14 +84,14 @@ func register(user model.User, sess *sessions.Session, req *http.Request) (inter
 	pwhash, err := bcrypt.GenerateFromPassword([]byte(indata.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Printf("Error while hashing password: %s", err)
-		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
+		outdata.Error = "Internal error, sorry."
 		return outdata, user
 	}
 
 	user, err = dbcon.AddUser(mail, pwhash, indata.Timezone.Loc, false, acCode)
 	if err != nil {
 		log.Printf("Could not create user (%s): %s", indata.Mail, err)
-		outdata.Error = "Internal error, sorry. If this happens again, please contact support!"
+		outdata.Error = "Internal error, sorry."
 		return outdata, user
 	}
 

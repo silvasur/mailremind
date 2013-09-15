@@ -14,7 +14,7 @@ type pwresetTpldata struct {
 
 func pwreset(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
 	if err := req.ParseForm(); err != nil {
-		return &pwresetTpldata{Error: "Could not understand formdata."}, user
+		return &pwresetTpldata{Error: "Form data corrupted."}, user
 	}
 
 	code := req.FormValue("Code")
@@ -58,13 +58,13 @@ func pwreset(user model.User, sess *sessions.Session, req *http.Request) (interf
 	hash, err := bcrypt.GenerateFromPassword([]byte(pw1), bcrypt.DefaultCost)
 	if err != nil {
 		log.Printf("Could not has password: %s", err)
-		outdata.Error = "Failed hashing you password. If this happens again, please contact support."
+		outdata.Error = "Could not save password."
 		return outdata, user
 	}
 
 	if err := user.SetPWHash(hash); err != nil {
-		log.Printf("Error while storing new password: %s", err)
-		outdata.Error = "Could not store password. If this happens again, please contact support."
+		log.Printf("Error while hashing password: %s", err)
+		outdata.Error = "Could not save password."
 		return outdata, user
 	}
 
@@ -86,7 +86,7 @@ func forgotpw(user model.User, sess *sessions.Session, req *http.Request) (inter
 	}
 
 	if err := req.ParseForm(); err != nil {
-		return &forgotpwTpldata{Error: "Could not understand formdata."}, user
+		return &forgotpwTpldata{Error: "Form data corrupted."}, user
 	}
 
 	email := req.FormValue("Mail")
@@ -102,11 +102,11 @@ func forgotpw(user model.User, sess *sessions.Session, req *http.Request) (inter
 	key := genAcCode()
 	if err := user.SetActivationCode(key); err != nil {
 		log.Printf("Could not store pwreset key: %s", err)
-		return &forgotpwTpldata{Error: "Could not store keyword reset code. If this happens again, please contact support."}, user
+		return &forgotpwTpldata{Error: "Could not generate a keyword reset code."}, user
 	}
 
 	if !SendPwresetLink(user.Email(), key, user.ID()) {
-		return &forgotpwTpldata{Error: "Could not send reset E-Mail. If this happens again, please contact support."}, user
+		return &forgotpwTpldata{Error: "Could not send reset E-Mail."}, user
 	}
 
 	return &forgotpwTpldata{Success: "We sent you an E-Mail with further instructions."}, user

@@ -29,7 +29,7 @@ func login(user model.User, sess *sessions.Session, req *http.Request) (interfac
 	}
 
 	if err := req.ParseForm(); err != nil {
-		outdata.Error = "Data of form could not be understand. If this happens again, please contact support!"
+		outdata.Error = "Formdata corrupted. Please try again."
 		return outdata, user
 	}
 
@@ -47,7 +47,7 @@ func login(user model.User, sess *sessions.Session, req *http.Request) (interfac
 		return outdata, user
 	default:
 		log.Printf("Error while loding user data (login): %s", err)
-		outdata.Error = "User data could not be loaded. Please contact support, if this happens again."
+		outdata.Error = "User data could not be loaded."
 		return outdata, user
 	}
 

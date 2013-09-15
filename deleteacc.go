@@ -27,7 +27,7 @@ func deleteacc(user model.User, sess *sessions.Session, req *http.Request) (inte
 	if err := user.Delete(); err != nil {
 		log.Printf("Error while deleting account: %s", err)
 		outdata.Class = "error"
-		outdata.Msg = "An error occurred during deletion. Please contact support, if this happens again."
+		outdata.Msg = "An error occurred during deletion."
 		return outdata, user
 	}
 
