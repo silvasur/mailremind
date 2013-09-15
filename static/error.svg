@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="50"
+   height="50"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-1002.3622)"
+     id="layer1">
+    <path
+       d="M -14.344328,1046.3622 46,1046.3622 15.827836,986.0179 z"
+       id="path3763"
+       style="fill:none;stroke:#000000;stroke-width:5.80233908;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36078431;stroke-dasharray:none" />
+    <g
+       id="text3765"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.75294118;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma">
+      <path
+         d="m 16.069878,1032.1201 c -2.367352,0 -4.316941,1.9034 -4.316941,4.1777 0,2.4602 1.903169,4.4096 4.270521,4.4096 2.367354,0 4.316942,-1.9494 4.316942,-4.3168 0,-2.3671 -1.90317,-4.2705 -4.270522,-4.2705 m 1.903166,-5.5654 c 0.324932,-4.456 0.603443,-6.3594 1.624656,-10.9085 0.928372,-3.899 1.114049,-4.8739 1.114049,-6.1736 0,-3.1099 -1.810333,-5.106 -4.595453,-5.106 -2.645864,0 -4.68829,2.0425 -4.68829,4.6417 0,1.5318 0.185675,2.6462 1.114049,6.9164 0.789118,3.5743 1.206886,6.3133 1.624656,10.63 l 3.806333,0"
+         id="path3770"
+         style="font-size:20px;font-weight:bold;fill:#000000;fill-opacity:0.36078431;font-family:URW Bookman L;-inkscape-font-specification:URW Bookman L Bold" />
+    </g>
+  </g>
+</svg>
