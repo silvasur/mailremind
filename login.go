@@ -44,16 +44,16 @@ func login(user model.User, sess *sessions.Session, req *http.Request) (interfac
 	case nil:
 	case model.NotFound:
 		outdata.Error = "E-Mail or password was wrong."
-		return outdata, user
+		return outdata, nil
 	default:
 		log.Printf("Error while loding user data (login): %s", err)
 		outdata.Error = "User data could not be loaded."
-		return outdata, user
+		return outdata, nil
 	}
 
 	if bcrypt.CompareHashAndPassword(user.PWHash(), []byte(indata.Password)) != nil {
 		outdata.Error = "E-Mail or password was wrong."
-		return outdata, user
+		return outdata, nil
 	}
 
 	sess.Values["uid"] = user.ID().String()
