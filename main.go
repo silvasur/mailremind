@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/kch42/mailremind/confhelper"
+	"github.com/kch42/mailremind/model"
 	_ "github.com/kch42/mailremind/model/mysql"
 	"github.com/kch42/simpleconf"
 	"log"
@@ -82,10 +83,15 @@ func main() {
 	router.HandleFunc("/jobedit", mkHttpHandler(jobedit, tplJobedit))
 	router.HandleFunc("/jobedit/{ID}", mkHttpHandler(jobedit, tplJobedit))
 	router.HandleFunc("/settings", mkHttpHandler(settings, tplSettings))
+	router.HandleFunc("/", mkHttpHandler(index, tplIndex))
 
 	http.Handle("/", router)
 
 	if err := http.ListenAndServe(laddr, nil); err != nil {
 		log.Fatalf("Could not ListenAndServe: %s", err)
 	}
+}
+
+func index(user model.User, sess *sessions.Session, req *http.Request) (interface{}, model.User) {
+	return nil, user
 }

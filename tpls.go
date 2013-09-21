@@ -27,6 +27,7 @@ var (
 	tplJobs         *template.Template
 	tplJobedit      *template.Template
 	tplSettings     *template.Template
+	tplIndex        *template.Template
 )
 
 func initTpls() {
@@ -41,6 +42,7 @@ func initTpls() {
 	tplJobs = loadTpl(tplpath, "jobs")
 	tplJobedit = loadTpl(tplpath, "jobedit")
 	tplSettings = loadTpl(tplpath, "settings")
+	tplIndex = loadTpl(tplpath, "index")
 }
 
 type msgTpldata struct {

@@ -28,8 +28,9 @@
 		</div>
 		
 		<div id="footer">
-			© 2013 Bla bla....<br />
-			Foo!
+{{/* START EDITING FOOTER HERE */}}
+			<strong>PLEASE EDIT THIS FOOTER TO CONTAIN SOME CONTACT DATA. YOU CAN DO SO BY EDITING THE tpls/master.tpl TEMPLATE.</strong>
+{{/* STOP EDITING FOOTER HERE */}}
 		</div>
 	</div>
 </body>
