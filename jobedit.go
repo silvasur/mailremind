@@ -217,7 +217,7 @@ func jobedit(user model.User, sess *sessions.Session, req *http.Request) (interf
 	}
 
 	if req.Method == "POST" {
-		if (job == nil) && (user.CountJobs() >= jobsLimit) {
+		if (job == nil) && (jobsLimit >= 0) && (user.CountJobs() >= jobsLimit) {
 			outdata.Error = "You have reached the limit of jobs per user."
 			outdata.Fatal = true
 			return outdata, user
