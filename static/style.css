@@ -13,7 +13,8 @@ body {
 }
 
 #main {
-	width: 85%;
+	width: 70%;
+	min-width: 150mm;
 	margin: 7.5mm auto 10mm;
 	padding: 0px;
 }
@@ -136,4 +137,14 @@ div.error {
 
 div.success {
 	background: #ddd url(success.png) no-repeat top left;
+}
+
+form.fancy {
+	width: 80mm;
+	margin: auto;
+}
+
+form.fancy input, form.fancy select {
+	height: 4ex;
+	width: 100%;
 }

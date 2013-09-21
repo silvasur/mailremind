@@ -8,7 +8,7 @@
 	{{if .Success}}
 		<div class="success">{{.Success}}</div>
 	{{else}}
-		<form action="/login" method="post" accept-charset="UTF-8">
+		<form action="/login" method="post" accept-charset="UTF-8" class="fancy">
 			<p><strong>E-Mail</strong> <input type="text" name="Mail" /></p>
 			<p><strong>Password</strong> <input type="password" name="Password" /></p>
 			<p><input type="submit" /></p>
