@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"kch42.de/gostuff/mailremind/model"
+	"github.com/kch42/mailremind/model"
 	"strconv"
 )
 

@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
-	"kch42.de/gostuff/mailremind/schedule"
+	"github.com/kch42/mailremind/schedule"
 	"sync"
 	"time"
 )

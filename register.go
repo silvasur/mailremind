@@ -3,7 +3,7 @@ package main
 import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"github.com/gorilla/sessions"
-	"kch42.de/gostuff/mailremind/model"
+	"github.com/kch42/mailremind/model"
 	"log"
 	"math/rand"
 	"net/http"

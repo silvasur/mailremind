@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gorilla/sessions"
+	"github.com/kch42/mailremind/model"
 	"html/template"
-	"kch42.de/gostuff/mailremind/model"
 	"log"
 	"net/http"
 )
