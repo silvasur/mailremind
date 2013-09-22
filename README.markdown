@@ -19,3 +19,7 @@ All config stuff is in the mailremind.ini file.
 ## Running
 
 Simply run `./mailremind -config mailremind.ini` and mailremind will listen on the configured address (net.laddr) and handle http requests.
+
+## Public mailremind installations
+
+* [mailremind.kch42.net](http://mailremind.kch42.net)
