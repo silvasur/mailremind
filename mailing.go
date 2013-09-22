@@ -24,7 +24,7 @@ func Mail(to, from string, msg []byte) bool {
 
 func initMailing() {
 	meth := confhelper.ConfStringOrFatal(conf, "mail", "method")
-	MailFrom = confhelper.ConfStringOrFatal(conf, "mail", "addr")
+	MailFrom = confhelper.ConfStringOrFatal(conf, "mail", "from")
 
 	parallel := confhelper.ConfIntOrFatal(conf, "mail", "parallel")
 	if parallel <= 0 {
