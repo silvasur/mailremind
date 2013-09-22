@@ -44,7 +44,7 @@ func SendActivationcode(to, acCode string, uid model.DBID) bool {
 
 	fmt.Fprintln(buf, "")
 
-	url := fmt.Sprintf("%s/activate/U=%s&Code=%s", baseurl, uid, acCode)
+	url := fmt.Sprintf("%s/activate?U=%s&Code=%s", baseurl, uid, acCode)
 	if err := mailActivationcode.Execute(buf, activationcodeData{url}); err != nil {
 		log.Printf("Error while executing mail template (activationcode): %s", err)
 		return false
