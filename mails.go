@@ -3,8 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/kch42/mailremind/confhelper"
-	"github.com/kch42/mailremind/model"
+	"github.com/silvasur/mailremind/confhelper"
+	"github.com/silvasur/mailremind/model"
 	"log"
 	"path"
 	"text/template"

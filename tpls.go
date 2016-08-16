@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kch42/mailremind/confhelper"
+	"github.com/silvasur/mailremind/confhelper"
 	"html/template"
 	"log"
 	"path"

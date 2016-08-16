@@ -1,7 +1,7 @@
 package mailing
 
 import (
-	"github.com/kch42/simpleconf"
+	"github.com/silvasur/simpleconf"
 )
 
 // Mailer is a interface that defines the Mail function.

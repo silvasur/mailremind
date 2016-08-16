@@ -10,7 +10,7 @@ I often send myself an email to remind me of something. If the event I want to b
 
 Get the sources and build mailremind with `go build`.
 
-Or simply run `go get github.com/kch42/mailremind`. This will place the compiled binary in your `$GOPATH/bin` directory.
+Or simply run `go get github.com/silvasur/mailremind`. This will place the compiled binary in your `$GOPATH/bin` directory.
 
 ## Configuration
 
@@ -22,4 +22,4 @@ Simply run `./mailremind -config mailremind.ini` and mailremind will listen on t
 
 ## Public mailremind installations
 
-* [mailremind.kch42.net](http://mailremind.kch42.net)
+* [mailremind.silvasur.net](http://mailremind.silvasur.net)

@@ -3,7 +3,7 @@ package mailing
 import (
 	"errors"
 	"fmt"
-	"github.com/kch42/simpleconf"
+	"github.com/silvasur/simpleconf"
 	"os/exec"
 )
 

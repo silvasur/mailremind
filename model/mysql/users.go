@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"database/sql"
-	"github.com/kch42/mailremind/model"
+	"github.com/silvasur/mailremind/model"
 	"log"
 	"time"
 )

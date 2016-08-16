@@ -2,7 +2,7 @@ package mailing
 
 import (
 	"errors"
-	"github.com/kch42/simpleconf"
+	"github.com/silvasur/simpleconf"
 	"net/smtp"
 )
 

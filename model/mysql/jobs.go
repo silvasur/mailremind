@@ -3,8 +3,8 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kch42/mailremind/model"
-	"github.com/kch42/mailremind/schedule"
+	"github.com/silvasur/mailremind/model"
+	"github.com/silvasur/mailremind/schedule"
 	"log"
 	"time"
 )

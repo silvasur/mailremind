@@ -1,7 +1,7 @@
 package confhelper
 
 import (
-	"github.com/kch42/simpleconf"
+	"github.com/silvasur/simpleconf"
 	"log"
 )
 

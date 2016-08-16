@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"github.com/kch42/mailremind/confhelper"
-	"github.com/kch42/mailremind/model"
-	"github.com/kch42/mailremind/schedule"
+	"github.com/silvasur/mailremind/confhelper"
+	"github.com/silvasur/mailremind/model"
+	"github.com/silvasur/mailremind/schedule"
 	"log"
 	"net/http"
 	"net/url"
