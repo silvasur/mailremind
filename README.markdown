@@ -20,6 +20,3 @@ All config stuff is in the mailremind.ini file.
 
 Simply run `./mailremind -config mailremind.ini` and mailremind will listen on the configured address (net.laddr) and handle http requests.
 
-## Public mailremind installations
-
-* [mailremind.silvasur.net](http://mailremind.silvasur.net)
